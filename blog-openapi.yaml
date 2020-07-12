@@ -1,0 +1,402 @@
+openapi: 3.0.0
+servers:
+  - description: blogging API
+    url: http://localhost
+info:
+  description: This is a simple blogging API
+  version: "1.0.0"
+  title: Simple blogging APIs
+  contact:
+    email: gouthams.ku@gmail.com
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: user
+    description: Operations available to regular user
+paths:
+  /blogUsers:
+    get:
+      tags:
+        - user
+      summary: searches blogUsers
+      operationId: searchblogUsers
+      description: search for all available blogUsers in the system
+      parameters:
+        - in: query
+          name: name
+          description: pass an valid name search string for looking up blogUsers
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          description: maximum number of records to return
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 50
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/blogUser'
+    post:
+      tags:
+        - user
+      summary: adds an blogUsers item
+      operationId: addBlogUsers
+      description: Adds a user in the system
+      responses:
+        '201':
+          description: item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: an existing item already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: content-type not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogUser'
+  /blogUsers/{id}:
+    get:
+      tags:
+        - user
+      summary: get a single blogUsers
+      operationId: getblogUsers
+      description: Get the user with the given id
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '200':
+          description: Request accepted, returns the blogUser
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blogUser'
+        '400':
+          description: Invalid parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: blogUser not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - user
+      summary: update an blogUsers item
+      operationId: updateBlogUsers
+      description: Updates a user in the system
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '200':
+          description: item updated
+        '400':
+          description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: content-type not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogUser'
+    delete:
+      tags:
+        - user
+      summary: deletes an blogUsers item
+      operationId: deleteBlogUsers
+      description: Deletes a user in the system
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /blogPosts:
+    get:
+      tags:
+        - user
+      summary: searches blogPosts
+      operationId: searchblogPosts
+      description: search for all available blogPosts in the system
+      parameters:
+        - in: query
+          name: userId
+          description: pass an valid userId search string for looking up blogPosts
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: pageSize
+          description: maximum number of records to return
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 50
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/blogPost'
+    post:
+      tags:
+        - user
+      summary: adds an blogPosts item
+      operationId: addblogPosts
+      description: Adds a user in the system
+      responses:
+        '201':
+          description: item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: an existing item already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: content-type not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogPost'
+  /blogPosts/{id}:
+    get:
+      tags:
+        - user
+      summary: get a single blogPosts
+      operationId: getblogPosts
+      description: Get the blog post with the given id
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '200':
+          description: Request accepted, returns the blogPost
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/blogPost'
+        '400':
+          description: Invalid parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: blogPost not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - user
+      summary: update an blogPosts item
+      operationId: updateblogPosts
+      description: Updates a blog post in the system
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '200':
+          description: item updated
+        '400':
+          description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: content-type not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogPost'
+    delete:
+      tags:
+        - user
+      summary: deletes an blogPosts item
+      operationId: delete blogPosts
+      description: Deletes a blog post in the system
+      parameters:
+        - $ref: '#components/parameters/idParam'
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    blogUser:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          readOnly: true
+        name:
+          type: string
+          example: Jim Do
+        email:
+          type: string
+          example: Jim@gamil.com
+          format: email
+        lastModifiedDate:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          readOnly: true
+    blogPost:
+      type: object
+      required:
+        - topic
+        - content
+        - userId
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        topic:
+          type: string
+          example: Blog topic
+        content:
+          type: string
+          example: Post content
+        lastModifiedDate:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+          readOnly: true
+    Error:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      description: The id of the blog user to retrieve
+      schema:
+        type: string
