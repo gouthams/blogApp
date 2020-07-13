@@ -40,6 +40,15 @@ dockerStop:
 	docker stop $(shell docker ps -aqf "name=blogAppContainer")
 	docker rm $(shell docker ps -aqf "name=blogAppContainer")
 
+dockerBuildTest: clean generate
+	docker build --target test -t blogapptest:latest -f Dockerfile .
+
+dockerRunTest:
+	docker run -p 8080:8080 --name blogAppContainerTest -v /tmp/db:/data/db blogapptest:latest
+
+dockerStopTest:
+	docker stop $(shell docker ps -aqf "name=blogAppContainerTest")
+	docker rm $(shell docker ps -aqf "name=blogAppContainerTest")
 # just runs a go build on local files
 # NOTE: Need a local mongoDD running to host the server
 localRun: format

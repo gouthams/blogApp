@@ -17,7 +17,8 @@ import (
 
 // AddblogPosts - adds an blogPosts item
 func AddblogPosts(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Debug("Post request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
@@ -39,13 +40,6 @@ func AddblogPosts(c *gin.Context) {
 	if err != nil {
 		logEntry.Errorf("Retrieval failed!")
 		c.JSON(http.StatusBadRequest, restimpl.Error{Code: "400", Message: "UserId is not valid."})
-		return
-	}
-
-	isDup, err := getBlogPostByid(blogPost.Id, logEntry)
-	if isDup != (restimpl.BlogPost{}) {
-		logEntry.Errorf("Post already exists %v", err)
-		c.JSON(http.StatusConflict, restimpl.Error{Code: "409", Message: "Post already exists."})
 		return
 	}
 
@@ -75,7 +69,7 @@ func AddblogPosts(c *gin.Context) {
 
 // DeleteBlogPosts - deletes an blogPosts item
 func DeleteBlogPosts(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithField("url", c.Request.URL)
 	logEntry.Debug("Delete request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
@@ -133,7 +127,8 @@ func deletePostById(id string, logEntry *utils.REntry) (bool, error) {
 
 // GetblogPosts - get a single blogPosts
 func GetblogPosts(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Debug("Get request received.")
 
 	id := c.Param("id")
@@ -172,7 +167,8 @@ func getBlogPostByid(id string, logEntry *utils.REntry) (restimpl.BlogPost, erro
 
 // SearchblogPosts - searches blogPosts
 func SearchblogPosts(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Info("Search request received.")
 
 	//Query string from the url
@@ -198,7 +194,7 @@ func SearchblogPosts(c *gin.Context) {
 	findOptions.SetLimit(pageLimit)
 
 	//Explicitly initialize the slice with empty value to return if none found
-	res := []restimpl.BlogPost{}
+	var res []restimpl.BlogPost
 	postCollection, ctx := utils.GetPostCollection()
 	cursor, err := postCollection.Find(ctx, filter, findOptions)
 	if err != nil {
@@ -226,8 +222,9 @@ func SearchblogPosts(c *gin.Context) {
 
 // UpdateblogPosts - update an blogPosts item
 func UpdateblogPosts(c *gin.Context) {
-	logEntry := utils.Log()
-	logEntry.Debug("Post request received.")
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
+	logEntry.Debug("Update request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
 	if contentType, _, err := mime.ParseMediaType(contentType); contentType != "application/json" || err != nil {

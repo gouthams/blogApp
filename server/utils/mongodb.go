@@ -9,12 +9,11 @@ import (
 )
 
 var db *mongo.Database
+var ctx context.Context
 
 const dbName = "blogDB"
 const blogUserCollection = "blogUser"
 const blogPostCollection = "blogPost"
-
-var ctx context.Context
 
 func ConnectToDatabase() *mongo.Database {
 	logEntry := Log()

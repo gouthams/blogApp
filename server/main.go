@@ -10,7 +10,6 @@ package main
 import (
 	serve "github.com/gouthams/blogApp/server/restimpl"
 	"github.com/gouthams/blogApp/server/utils"
-	"log"
 )
 
 const port = ":8080"
@@ -21,10 +20,12 @@ func main() {
 
 	//Initialize DB
 	utils.ConnectToDatabase()
-
-	log.Printf("Server started")
-
+	logEntry := utils.Log()
 	router := serve.NewRouter()
 
-	log.Fatal(router.Run(port))
+	err := router.Run(port)
+	if err != nil {
+		logEntry.Fatalf("Unable to start the server on port:%s", port)
+	}
+	logEntry.Info("Server started on port:%s", port)
 }

@@ -222,12 +222,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '409':
-          description: an existing item already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '415':
           description: content-type not supported.
           content:

@@ -20,7 +20,8 @@ import (
 
 // AddBlogUsers - adds an blogUsers item
 func AddBlogUsers(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Debug("Post request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
@@ -71,7 +72,8 @@ func AddBlogUsers(c *gin.Context) {
 
 // GetblogUsers - get a single blogUsers
 func GetblogUsers(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Debug("Get request received.")
 
 	id := c.Param("id")
@@ -125,7 +127,8 @@ func getBlogUserByEmail(email string, logEntry *utils.REntry) (restimpl.BlogUser
 
 // SearchblogUsers - searches blogUsers
 func SearchblogUsers(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Info("Search request received.")
 
 	//Query string from the url
@@ -178,8 +181,9 @@ func SearchblogUsers(c *gin.Context) {
 
 // UpdateBlogUsers - update an blogUsers item
 func UpdateBlogUsers(c *gin.Context) {
-	logEntry := utils.Log()
-	logEntry.Debug("Post request received.")
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
+	logEntry.Debug("Update request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
 	if contentType, _, err := mime.ParseMediaType(contentType); contentType != "application/json" || err != nil {
@@ -244,7 +248,7 @@ func deleteUserById(id string, logEntry *utils.REntry) (bool, error) {
 	if err != nil {
 		// If get user fails that means the user is not in the system, delete will be treated as success.
 		// TODO: If the failure is not able to connect to DB this behaviour needs to be changed.
-		logEntry.Errorf("Unable to get the user with id: %s", id)
+		logEntry.Errorf("Unable to get the user with id: %s. Error : %v", id, err)
 		return true, nil
 	}
 
@@ -262,7 +266,8 @@ func deleteUserById(id string, logEntry *utils.REntry) (bool, error) {
 
 // DeleteBlogUsers - deletes an blogUsers item
 func DeleteBlogUsers(c *gin.Context) {
-	logEntry := utils.Log()
+	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
+		"Method": c.Request.Method})
 	logEntry.Debug("Delete request received.")
 
 	contentType := c.Request.Header.Get("Content-type")
