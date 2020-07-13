@@ -63,6 +63,7 @@ func AddblogPosts(c *gin.Context) {
 		return
 	}
 
+	logEntry.Infof("blogPost with id: %s created!", blogPost.Id)
 	c.JSON(http.StatusCreated, post)
 	return
 }
@@ -93,7 +94,8 @@ func DeleteBlogPosts(c *gin.Context) {
 			Message: fmt.Sprintf("Delete post with id: %s failed", id)})
 	}
 
-	c.JSON(http.StatusNoContent, restimpl.Error{Code: "500",
+	logEntry.Infof("blogPost with id: %s deleted!", id)
+	c.JSON(http.StatusNoContent, restimpl.Error{Code: "204",
 		Message: fmt.Sprintf("Delete post with id: %s Succeeded",
 			id)})
 }
@@ -145,7 +147,7 @@ func GetblogPosts(c *gin.Context) {
 		return
 	}
 
-	logEntry.Infof("Documents retrieved %v")
+	logEntry.Infof("Document retrieved with id: %s", post.Id)
 	c.JSON(http.StatusOK, post)
 	return
 }
@@ -169,7 +171,7 @@ func getBlogPostByid(id string, logEntry *utils.REntry) (restimpl.BlogPost, erro
 func SearchblogPosts(c *gin.Context) {
 	logEntry := utils.Log().WithFields(utils.Fields{"url": c.Request.URL,
 		"Method": c.Request.Method})
-	logEntry.Info("Search request received.")
+	logEntry.Debug("Search request received.")
 
 	//Query string from the url
 	query := c.Request.URL.Query()
@@ -205,7 +207,7 @@ func SearchblogPosts(c *gin.Context) {
 
 	logEntry.Debugf("Cursor from DB: %v", cursor)
 	for cursor.Next(ctx) {
-		logEntry.Infof("Documents retrieved %v", cursor.Current)
+		logEntry.Debugf("Documents retrieved %v", cursor.Current)
 		var post restimpl.BlogPost
 		err := cursor.Decode(&post)
 		//If the is issue with one post log the error and continue
@@ -216,6 +218,7 @@ func SearchblogPosts(c *gin.Context) {
 		res = append(res, post)
 	}
 
+	logEntry.Info("BlogPost document search done!")
 	c.JSON(http.StatusOK, res)
 	return
 }
@@ -265,8 +268,7 @@ func UpdateblogPosts(c *gin.Context) {
 		logEntry.Errorf("Insert failed %v", err)
 	}
 
-	logEntry.Infof("Document created %v doc: %v", doc.InsertedID, doc)
-
+	logEntry.Debugf("Document updated with doc id:%v doc: %v", doc.InsertedID, doc)
 	post, err := getBlogPostByid(blogPost.Id, logEntry)
 	if err != nil {
 		logEntry.Errorf("Retrieval failed!")
@@ -274,6 +276,7 @@ func UpdateblogPosts(c *gin.Context) {
 		return
 	}
 
+	logEntry.Infof("blogPost with id: %s updated!", id)
 	c.JSON(http.StatusOK, post)
 	return
 }

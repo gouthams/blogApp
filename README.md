@@ -3,8 +3,8 @@ A sample blogging application backend api.
 A simple Go(Gin-Gonic) backend server to host blogging apis with the mongoDb as the persistence layer.
 This hosts two CRUD apis blogUsers and blogPosts and runs on default http port 8080
 
-Example:
-post -> http://localhost:8080/blogUsers
+Example requests:
+post -> http://localhost:8080/blogUsers  
 get -> http://localhost:8080/blogPosts?userId=<60170ef7-2157-4c83-b0db-9efcf492f17d>&pageSize=10
    
 ## Assumptions:

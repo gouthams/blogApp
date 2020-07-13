@@ -66,6 +66,7 @@ func AddBlogUsers(c *gin.Context) {
 		return
 	}
 
+	logEntry.Infof("blogUser with id: %s created!", blogUser.Id)
 	c.JSON(http.StatusCreated, user)
 	return
 }
@@ -90,7 +91,7 @@ func GetblogUsers(c *gin.Context) {
 		return
 	}
 
-	logEntry.Infof("Documents retrieved %v")
+	logEntry.Infof("BlogUser with id: %s retrieved ", id)
 	c.JSON(http.StatusOK, user)
 	return
 }
@@ -164,7 +165,7 @@ func SearchblogUsers(c *gin.Context) {
 	}
 
 	for cursor.Next(ctx) {
-		logEntry.Infof("Documents retrieved %v", cursor.Current)
+		logEntry.Debugf("Documents retrieved %v", cursor.Current)
 		var user restimpl.BlogUser
 		err := cursor.Decode(&user)
 		//If the is issue with one user log the error and continue
@@ -175,6 +176,7 @@ func SearchblogUsers(c *gin.Context) {
 		res = append(res, user)
 	}
 
+	logEntry.Info("BlogUser document search done!")
 	c.JSON(http.StatusOK, res)
 	return
 }
@@ -233,6 +235,7 @@ func UpdateBlogUsers(c *gin.Context) {
 		return
 	}
 
+	logEntry.Infof("blogUser with id: %s updated!", blogUser.Id)
 	c.JSON(http.StatusOK, user)
 	return
 }
@@ -291,7 +294,8 @@ func DeleteBlogUsers(c *gin.Context) {
 			Message: fmt.Sprintf("Delete user with id: %s failed", id)})
 	}
 
-	c.JSON(http.StatusNoContent, restimpl.Error{Code: "500",
+	logEntry.Infof("blogUser with id: %s deleted!", id)
+	c.JSON(http.StatusNoContent, restimpl.Error{Code: "204",
 		Message: fmt.Sprintf("Delete user with id: %s Succeeded",
 			id)})
 }
